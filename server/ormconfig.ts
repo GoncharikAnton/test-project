@@ -1,40 +1,40 @@
-var dbConfig = {
-  synchronize: false,
-  migrations: ['migrations/*.js'],
-  cli: {
-    migrationsDir: 'migrations',
-  },
-};
+import { DataSource } from 'typeorm';
+
+var dbConfig = null;
 
 switch (process.env.ENV) {
   case 'DEV':
-    Object.assign(dbConfig, {
-      type: process.env.DB_TYPE,
+    dbConfig = new DataSource({
+      type: process.env.DB_TYPE as any,
       host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
+      port: parseInt(process.env.DB_PORT),
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: ['**/*.entity.js'],
+      migrations: [__dirname + 'migrations/*.js'],
+      migrationsTableName: 'migrations',
       synchronize: true,
     });
     break;
   case 'TEST':
-    Object.assign(dbConfig, {
-      type: process.env.DB_TYPE,
+    dbConfig = new DataSource({
+      type: process.env.DB_TYPE as any,
       host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
+      port: parseInt(process.env.DB_PORT),
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: ['**/*.entity.js'],
-      synchronize: true,
+      migrations: [__dirname + 'migrations/*.js'],
+      migrationsTableName: 'migrations',
+      synchronize: false,
     });
     break;
   case 'PROD':
-    break;
+    throw new Error('Production environment is not set up');
   default:
     throw new Error('Unknown environment');
 }
 
-module.exports = dbConfig;
+export default dbConfig;
