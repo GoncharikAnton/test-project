@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { User } from './users/entity/user.entity';
 const cookieSession = require('cookie-session');
 @Module({
   imports: [
@@ -13,7 +14,6 @@ const cookieSession = require('cookie-session');
       envFilePath: `./.env.${process.env.ENV}`,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         type: configService.get<any>('DB_TYPE'),
         host: configService.get<string>('DB_HOST'),
@@ -21,6 +21,7 @@ const cookieSession = require('cookie-session');
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
+        entities: [User],
         autoLoadEntities: true,
         synchronize: true,
       }),

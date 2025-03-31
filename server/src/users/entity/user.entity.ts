@@ -12,14 +12,17 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 200, unique: true, nullable: false })
+  @Column({ type: 'varchar', length: 200, unique: true })
   email: string;
 
-  @Column({ nullable: false })
+  @Column()
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   refreshToken: string;
+
+  @Column({ default: true })
+  isAdmin: boolean;
 
   @AfterInsert()
   logInserts() {
