@@ -23,11 +23,13 @@ import { UserDto } from '../users/dtos/user.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post('/signout')
   signOut(@Session() session: any) {
     session.userId = null;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('/signin')
   signinUser(@Body() data: CreateUserDtos) {
     return this.authService.signin(data);
@@ -45,6 +47,11 @@ export class AuthController {
 
   @Put('/:id')
   updateUser(@Body() data: UpdateUserDtos) {}
+
+  @Get('/all')
+  getAllUsers() {
+    return this.authService.getAllUsers();
+  }
 
   // @UseGuards(JwtAuthGuard)
   // @Get()

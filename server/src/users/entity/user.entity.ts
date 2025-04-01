@@ -4,14 +4,16 @@ import {
   AfterUpdate,
   Column,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-
+type UserRole = 'admin' | 'user' | 'guest';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Index()
   @Column({ type: 'varchar', length: 200, unique: true })
   email: string;
 
@@ -21,8 +23,8 @@ export class User {
   @Column({ nullable: true })
   refreshToken: string;
 
-  @Column({ default: true })
-  isAdmin: boolean;
+  @Column()
+  role: UserRole;
 
   @AfterInsert()
   logInserts() {
